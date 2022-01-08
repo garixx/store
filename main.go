@@ -5,7 +5,6 @@ import (
 	"github.com/sirupsen/logrus"
 	"log"
 	"net/http"
-	"os"
 )
 
 const (
@@ -16,7 +15,7 @@ const (
 func main() {
 	err := initializeTransactionLog()
 	if err != nil {
-		os.Exit(1)
+		log.Fatal("init failed: ", err)
 	}
 
 	r := mux.NewRouter()
@@ -25,6 +24,7 @@ func main() {
 	r.HandleFunc(path, keyValueDeleteHandler).Methods("DELETE")
 	r.Use(loggingMiddleware)
 
+	logrus.Info("started ...")
 	log.Fatal(http.ListenAndServe(port, r))
 }
 
